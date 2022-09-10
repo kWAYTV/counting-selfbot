@@ -9,8 +9,8 @@ except ImportError as e:
     exit()
 
 # Variables
-token = "MTAwMjgwNDA0NTY0OTU1OTcwNQ.GTGSZ4.Iua1ww9KVDQUhWIdgZENfANgkn_-MQAFOarBco" # Token here
-counting_channel = "986915223556485170" # Counting channel ID
+token = "" # Token here
+counting_channel = "" # Counting channel ID
 humanized = False # Use True if you want a randomized delay of False if you want it to be instant
 delay = [0.5, 5] # Don't touch this
 selfbot = True # Self explanatory
