@@ -1,6 +1,6 @@
 # Imports
 try:
-    import discord, time, random, sys, asyncio, colorama, warnings, pystyle
+    import discord, time, random, sys, asyncio, colorama, warnings, pystyle, os
     from colorama import Fore, Back, Style
     from discord.ext import commands
     from pystyle import Colors, Colorate, Center
@@ -9,6 +9,7 @@ except ImportError as e:
     exit()
 
 # Variables
+clear = lambda: os.system("cls" if os.name in ("nt", "dos") else "clear") # Don't touch this
 token = "" # Token here
 counting_channel = "" # Counting channel ID
 humanized = False # Use True if you want a randomized delay of False if you want it to be instant
@@ -45,9 +46,11 @@ async def on_ready():
     await bot.change_presence(status=discord.Status.do_not_disturb, activity=discord.Activity(type=discord.ActivityType.listening, name="numbers!"))
     print(f"\n{Fore.YELLOW}[{Fore.RESET}!{Fore.YELLOW}]{Fore.RESET} Logging in...")
     if humanized:
-        print(f"{Fore.MAGENTA}[{Fore.RESET}!{Fore.MAGENTA}]{Fore.RESET} Logged in as {Fore.MAGENTA}{bot.user}{Fore.RESET} - {Fore.GREEN}(Humanized){Fore.GREEN}{Fore.RESET}\n")
+        print(f"{Fore.MAGENTA}[{Fore.RESET}!{Fore.MAGENTA}]{Fore.RESET} Logged in as {Fore.MAGENTA}{bot.user}{Fore.RESET} - {Fore.GREEN}(Humanized delay){Fore.GREEN}{Fore.RESET}\n")
+        os.system(f"title Counter - Logged in as {bot.user} - Humanized delay - Ready")
     else:
-        print(f"{Fore.MAGENTA}[{Fore.RESET}!{Fore.MAGENTA}]{Fore.RESET} Logged in as {Fore.MAGENTA}{bot.user}{Fore.RESET} - {Fore.RED}(Botted){Fore.RED}{Fore.RESET}\n")
+        print(f"{Fore.MAGENTA}[{Fore.RESET}!{Fore.MAGENTA}]{Fore.RESET} Logged in as {Fore.MAGENTA}{bot.user}{Fore.RESET} - {Fore.RED}(Botted delay){Fore.RED}{Fore.RESET}\n")
+        os.system(f"title Counter - Logged in as {bot.user} - Botted delay - Ready")
 
 # Getting & sending the numbers
 @bot.event
@@ -88,6 +91,7 @@ async def on_message(message):
 
 # Start
 try:
+    clear()
     asyncio.run(bot.run(token))
 except KeyboardInterrupt:
     print(f"{Fore.YELLOW}[{Fore.RESET}!{Fore.YELLOW}]{Fore.RESET} Exiting...")
