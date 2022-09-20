@@ -54,6 +54,10 @@ async def on_ready():
         print(f"{Fore.RED}[{Fore.RESET}-{Fore.RED}]{Fore.RESET} Failed to login.")
         time.sleep(3)
         exit()
+    else:
+        print(f"{Fore.RED}[{Fore.RESET}-{Fore.RED}]{Fore.RESET} Failed to login.")
+        time.sleep(3)
+        exit()
 
 # Getting & sending the numbers
 @bot.event
