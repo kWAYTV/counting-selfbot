@@ -45,12 +45,15 @@ async def on_ready():
     printLogo()
     await bot.change_presence(status=discord.Status.do_not_disturb, activity=discord.Activity(type=discord.ActivityType.listening, name="numbers!"))
     print(f"\n{Fore.YELLOW}[{Fore.RESET}!{Fore.YELLOW}]{Fore.RESET} Logging in...")
-    if humanized:
+    if humanized == True:
         print(f"{Fore.MAGENTA}[{Fore.RESET}!{Fore.MAGENTA}]{Fore.RESET} Logged in as {Fore.MAGENTA}{bot.user}{Fore.RESET} - {Fore.GREEN}(Humanized delay){Fore.GREEN}{Fore.RESET}\n")
         os.system(f"title Counter - Logged in as {bot.user} - Humanized delay - Ready")
-    else:
+    elif humanized == False:
         print(f"{Fore.MAGENTA}[{Fore.RESET}!{Fore.MAGENTA}]{Fore.RESET} Logged in as {Fore.MAGENTA}{bot.user}{Fore.RESET} - {Fore.RED}(Botted delay){Fore.RED}{Fore.RESET}\n")
         os.system(f"title Counter - Logged in as {bot.user} - Botted delay - Ready")
+        print(f"{Fore.RED}[{Fore.RESET}-{Fore.RED}]{Fore.RESET} Failed to login.")
+        time.sleep(3)
+        exit()
 
 # Getting & sending the numbers
 @bot.event
