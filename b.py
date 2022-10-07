@@ -5,7 +5,7 @@ try:
     from discord.ext import commands
     from pystyle import Colors, Colorate, Center
 except ImportError as e:
-    print("Error: " + srt(e))
+    print("Error: " + str(e))
     exit()
 
 # Variables
