@@ -14,6 +14,7 @@ token = "" # Token here
 counting_channel = "" # Counting channel ID
 humanized = False # Use True if you want a randomized delay of False if you want it to be instant
 delay = [0.5, 5] # Don't touch this
+typing_delay = [0.6, 1.2] # Don't touch this
 selfbot = True # Self explanatory
 last_number = "" # Don't touch this
 
@@ -43,7 +44,6 @@ bot.remove_command("help")
 @bot.event
 async def on_ready():
     printLogo()
-    await bot.change_presence(status=discord.Status.do_not_disturb, activity=discord.Activity(type=discord.ActivityType.listening, name="numbers!"))
     print(f"\n{Fore.YELLOW}[{Fore.RESET}!{Fore.YELLOW}]{Fore.RESET} Logging in...")
     if humanized == True:
         print(f"{Fore.MAGENTA}[{Fore.RESET}!{Fore.MAGENTA}]{Fore.RESET} Logged in as {Fore.MAGENTA}{bot.user}{Fore.RESET} - {Fore.GREEN}(Humanized delay){Fore.GREEN}{Fore.RESET}\n")
@@ -51,9 +51,6 @@ async def on_ready():
     elif humanized == False:
         print(f"{Fore.MAGENTA}[{Fore.RESET}!{Fore.MAGENTA}]{Fore.RESET} Logged in as {Fore.MAGENTA}{bot.user}{Fore.RESET} - {Fore.RED}(Botted delay){Fore.RED}{Fore.RESET}\n")
         os.system(f"title Counter - Logged in as {bot.user} - Botted delay - Ready")
-        print(f"{Fore.RED}[{Fore.RESET}-{Fore.RED}]{Fore.RESET} Failed to login.")
-        time.sleep(3)
-        exit()
     else:
         print(f"{Fore.RED}[{Fore.RESET}-{Fore.RED}]{Fore.RESET} Failed to login.")
         time.sleep(3)
@@ -76,6 +73,7 @@ async def on_message(message):
             else:
                 if humanized:
                     sleep = random.uniform(delay[0], delay[1])
+                    typesleep = random.uniform(typing_delay[0], typing_delay[1])
                     time.sleep(sleep)
                 else:
                     sleep = 0
@@ -85,12 +83,20 @@ async def on_message(message):
                 elif int(message.content) > (last_number + 1):
                     print(f"{Fore.YELLOW}[{Fore.RESET}!{Fore.YELLOW}]{Fore.RESET} Higher number detected! Skipping...")
                 else:
-                    last_number += 2
-                    num = int(message.content)
-                    bigger_num = num + 1
-                    
-                    await channel.send(bigger_num)
-                    print(f"{Fore.GREEN}[{Fore.RESET}+{Fore.GREEN}]{Fore.RESET} Sending: {Fore.MAGENTA}" + str(bigger_num) + f". {Fore.RESET}Next number is {Fore.YELLOW}{str(last_number)}{Fore.RESET}. (Delay: {Fore.LIGHTCYAN_EX}{str(sleep)}{Fore.RESET} seconds)")
+                    if humanized:
+                        async with channel.typing():
+                            time.sleep(typesleep)
+                            last_number += 2
+                            num = int(message.content)
+                            bigger_num = num + 1
+                        await channel.send(bigger_num)
+                        print(f"{Fore.GREEN}[{Fore.RESET}+{Fore.GREEN}]{Fore.RESET} Sending: {Fore.MAGENTA}" + str(bigger_num) + f". {Fore.RESET}Next number is {Fore.YELLOW}{str(last_number)}{Fore.RESET}. (Delay: {Fore.LIGHTCYAN_EX}{str(sleep+typesleep)}{Fore.RESET} seconds)")
+                    else:
+                        last_number += 2
+                        num = int(message.content)
+                        bigger_num = num + 1
+                        await channel.send(bigger_num)
+                        print(f"{Fore.GREEN}[{Fore.RESET}+{Fore.GREEN}]{Fore.RESET} Sending: {Fore.MAGENTA}" + str(bigger_num) + f". {Fore.RESET}Next number is {Fore.YELLOW}{str(last_number)}{Fore.RESET}. ")
     except ValueError as e:
         print(f"{Fore.YELLOW}[{Fore.RESET}-{Fore.YELLOW}]{Fore.RESET} Invalid number: " + message.content)
     except Exception as e:
