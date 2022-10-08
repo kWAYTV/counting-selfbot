@@ -1,6 +1,6 @@
 # Imports
 try:
-    import discord, time, random, sys, asyncio, colorama, warnings, pystyle, os
+    import discord, time, random, sys, asyncio, colorama, warnings, pystyle, os, re
     from colorama import Fore, Back, Style
     from discord.ext import commands
     from pystyle import Colors, Colorate, Center
@@ -11,7 +11,7 @@ except ImportError as e:
 # Variables
 clear = lambda: os.system("cls" if os.name in ("nt", "dos") else "clear") # Don't touch this
 token = "" # Token here
-counting_channel = "" # Counting channel ID
+counting_channel = "" # Counting channel ID 
 humanized = False # Use True if you want a randomized delay of False if you want it to be instant
 delay = [0.5, 5] # Don't touch this
 typing_delay = [0.6, 1.2] # Don't touch this
@@ -59,13 +59,14 @@ async def on_ready():
 # Getting & sending the numbers
 @bot.event
 async def on_message(message):
+    num_strip = re.sub("[^0-9]", "", message.content) # Remove any data from the message that aren't numbers
     global last_number
     try:
         if bot.user.id != message.author.id and message.channel.id == int(counting_channel):
             channel = bot.get_channel(int(counting_channel))
             try:
                 if last_number == "":
-                    last_number = int(message.content)
+                    last_number = int(num_strip)
                 else:
                     pass
             except:
@@ -78,27 +79,27 @@ async def on_message(message):
                 else:
                     sleep = 0
                     pass  
-                if int(message.content) < last_number:
+                if int(num_strip) < last_number:
                     print(f"{Fore.YELLOW}[{Fore.RESET}!{Fore.YELLOW}]{Fore.RESET} Lower number detected! Skipping...")
-                elif int(message.content) > (last_number + 1):
+                elif int(num_strip) > (last_number + 1):
                     print(f"{Fore.YELLOW}[{Fore.RESET}!{Fore.YELLOW}]{Fore.RESET} Higher number detected! Skipping...")
                 else:
                     if humanized:
                         async with channel.typing():
                             time.sleep(typesleep)
                             last_number += 2
-                            num = int(message.content)
+                            num = int(num_strip)
                             bigger_num = num + 1
                         await channel.send(bigger_num)
                         print(f"{Fore.GREEN}[{Fore.RESET}+{Fore.GREEN}]{Fore.RESET} Sending: {Fore.MAGENTA}" + str(bigger_num) + f". {Fore.RESET}Next number is {Fore.YELLOW}{str(last_number)}{Fore.RESET}. (Delay: {Fore.LIGHTCYAN_EX}{str(sleep+typesleep)}{Fore.RESET} seconds)")
                     else:
                         last_number += 2
-                        num = int(message.content)
+                        num = int(num_strip)
                         bigger_num = num + 1
                         await channel.send(bigger_num)
                         print(f"{Fore.GREEN}[{Fore.RESET}+{Fore.GREEN}]{Fore.RESET} Sending: {Fore.MAGENTA}" + str(bigger_num) + f". {Fore.RESET}Next number is {Fore.YELLOW}{str(last_number)}{Fore.RESET}. ")
     except ValueError as e:
-        print(f"{Fore.YELLOW}[{Fore.RESET}-{Fore.YELLOW}]{Fore.RESET} Invalid number: " + message.content)
+        print(f"{Fore.YELLOW}[{Fore.RESET}-{Fore.YELLOW}]{Fore.RESET} Invalid number: " + str(num_strip))
     except Exception as e:
         print(f"{Fore.RED}[{Fore.RESET}-{Fore.RED}]{Fore.RESET} Error: " + str(e))
 
