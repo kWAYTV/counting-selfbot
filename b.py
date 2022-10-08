@@ -17,6 +17,7 @@ delay = [0.5, 5] # Don't touch this
 typing_delay = [0.6, 1.2] # Don't touch this
 selfbot = True # Self explanatory
 last_number = "" # Don't touch this
+shutdown = "" # Emergency shutdown word anybody can use to stop the selfbot (Make this something people wont say accidentally!)
 
 # Disable warnings
 warnings.filterwarnings("ignore")
@@ -59,6 +60,11 @@ async def on_ready():
 # Getting & sending the numbers
 @bot.event
 async def on_message(message):
+    if message.content == shutdown:
+        print(f"{Fore.RED}[{Fore.RESET}!{Fore.RED}]{Fore.RESET} Emergency Shutdown Activated")
+        os._exit(1)
+    else:
+        pass
     num_strip = re.sub("[^0-9]", "", message.content) # Remove any data from the message that aren't numbers
     global last_number
     try:
